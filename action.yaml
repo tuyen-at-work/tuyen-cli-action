@@ -1,0 +1,42 @@
+name: install-tuyen-cli
+description: Install Tuyen CLI
+author: Tuyen Pham
+
+branding:
+  icon: search
+  color: purple
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Tuyen CLI on Linux
+      if: runner.os == 'linux'
+      shell: bash
+      run: |
+        curl \
+          -L "https://github.com/tuyen-at-work/dev-tools/releases/download/linux/tuyen-cli-x86_64-unknown-linux-gnu.7z" \
+          -o tuyen-cli.7z \
+          --silent
+        7z x tuyen-cli.7z -bsp0 -bso0
+        rm tuyen-cli.7z
+        mkdir ~/bin
+        mv ./tuyen ~/bin/
+        chmod +x ~/bin/tuyen
+        echo "~/bin" >> $GITHUB_PATH
+
+    - name: Install Tuyen CLI on Windows
+      if: runner.os == 'windows'
+      shell: pwsh
+      run: |
+        Invoke-WebRequest `
+          -Uri "https://github.com/tuyen-at-work/dev-tools/releases/download/windows/tuyen-cli-x86_64-pc-windows-msvc.7z" `
+          -OutFile "tuyen-cli.7z"
+        7z x tuyen-cli.7z -bsp0 -bso0
+        Remove-Item tuyen-cli.7z
+        New-Item -ItemType Directory -Force -Path "$env:USERPROFILE/bin" | Out-Null
+        Move-Item ./tuyen.exe $env:USERPROFILE/bin/
+        echo "$env:USERPROFILE/bin" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_PATH
+
+    - name: Check Tuyen CLI version
+      run: tuyen --version
+      shell: bash

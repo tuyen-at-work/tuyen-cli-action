@@ -19,10 +19,10 @@ runs:
           --silent
         7z x tuyen-cli.7z -bsp0 -bso0
         rm tuyen-cli.7z
-        mkdir ~/bin
-        mv ./tuyen ~/bin/
-        chmod +x ~/bin/tuyen
-        echo "~/bin" >> $GITHUB_PATH
+        mkdir ~/tuyen-cli-bin
+        mv ./tuyen ~/tuyen-cli-bin/
+        chmod +x ~/tuyen-cli-bin/tuyen
+        echo "~/tuyen-cli-bin" >> $GITHUB_PATH
 
     - name: Install Tuyen CLI on Windows
       if: runner.os == 'windows'
@@ -33,9 +33,9 @@ runs:
           -OutFile "tuyen-cli.7z"
         7z x tuyen-cli.7z -bsp0 -bso0
         Remove-Item tuyen-cli.7z
-        New-Item -ItemType Directory -Force -Path "$env:USERPROFILE/bin" | Out-Null
-        Move-Item ./tuyen.exe $env:USERPROFILE/bin/
-        echo "$env:USERPROFILE/bin" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_PATH
+        New-Item -ItemType Directory -Force -Path "$env:USERPROFILE/tuyen-cli-bin" | Out-Null
+        Move-Item ./tuyen.exe $env:USERPROFILE/tuyen-cli-bin/
+        echo "$env:USERPROFILE/tuyen-cli-bin" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_PATH
 
     - name: Check Tuyen CLI version
       run: tuyen --version
